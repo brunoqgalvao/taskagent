@@ -59,7 +59,8 @@ export function formatTaskList(tasks, opts = {}) {
 }
 
 export function formatSummary(summary) {
-  let out = `\n${BOLD}Dashboard${RESET}\n`;
+  const projectName = summary.project?.name;
+  let out = `\n${BOLD}${projectName ? projectName + ' — Dashboard' : 'Dashboard'}${RESET}\n`;
   out += `  Total: ${summary.total}  Agents: ${summary.agents}\n`;
   out += `  ${GREEN}●${RESET} completed: ${summary.counts.completed}`;
   out += `  ${CYAN}◉${RESET} in_progress: ${summary.counts.in_progress}`;

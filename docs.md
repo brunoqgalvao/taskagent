@@ -4,12 +4,14 @@ This document teaches AI agents how to use taskagent effectively. If you are an 
 
 ## Setup
 
-Before doing anything, initialize and register yourself:
+Before doing anything, initialize with a project name and register yourself:
 
 ```bash
-taskagent init
+taskagent init --name "My API" --desc "Backend services for the platform"
 taskagent agent register <your-name> --type agent
 ```
+
+The `--name` and `--desc` flags are optional but recommended — they show up in dashboards and help identify which project you're working in.
 
 If there are human collaborators, register them too:
 
@@ -157,6 +159,37 @@ History entries include:
 - Changes diff (field: from → to)
 - Full snapshot of the task at that point
 
+## Project Info
+
+View current project:
+
+```bash
+taskagent project
+```
+
+Update project name or description:
+
+```bash
+taskagent project --name "New Name" --desc "Updated description"
+```
+
+JSON output:
+
+```bash
+taskagent project --json
+```
+
+### Project Object Shape
+
+```json
+{
+  "name": "My API",
+  "description": "Backend services for the platform",
+  "createdAt": "2026-02-23T10:00:00.000Z",
+  "updatedAt": "2026-02-23T11:30:00.000Z"
+}
+```
+
 ## Dashboard
 
 Quick summary:
@@ -169,6 +202,14 @@ Rich terminal UI with kanban board, dependency graph, agent workload bars, and o
 
 ```bash
 taskagent ui
+```
+
+Web dashboard in the browser (auto-refreshes every 5 seconds):
+
+```bash
+taskagent webui                         # opens http://localhost:3000
+taskagent webui --port 8080             # custom port
+taskagent webui --no-open               # don't auto-open browser
 ```
 
 ## JSON Output
@@ -241,7 +282,7 @@ taskagent history --json                # history entries
 
 ## Agent Best Practices
 
-1. **Always `taskagent init` and register yourself** at the start of a session
+1. **Always `taskagent init --name "Project Name"` and register yourself** at the start of a session
 2. **Check the dashboard first** — run `taskagent dashboard` or `taskagent list` to understand project state before doing anything
 3. **Mark tasks `in_progress` before starting** — this signals to other agents and humans what you're working on
 4. **Mark tasks `completed` immediately when done** — don't batch completions

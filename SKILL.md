@@ -15,10 +15,10 @@ Verify: `taskagent --help`
 
 ## Initialization
 
-Always initialize and register before using:
+Always initialize with a project name and register before using:
 
 ```bash
-taskagent init
+taskagent init --name "My Project" --desc "What it does"
 taskagent agent register claude --type agent
 ```
 
@@ -71,11 +71,19 @@ taskagent assign <id> bruno
 taskagent delete <id>
 ```
 
+### Project info
+
+```bash
+taskagent project                       # show project name/desc
+taskagent project --name "New Name"     # update project
+```
+
 ### Overview
 
 ```bash
 taskagent dashboard                     # summary stats
 taskagent ui                            # rich kanban board
+taskagent webui                         # web dashboard on localhost:3000
 taskagent history                       # full audit trail
 taskagent history <id>                  # single task history
 ```
@@ -92,7 +100,7 @@ taskagent dashboard --json
 
 ## Workflow
 
-1. `taskagent init` + register yourself
+1. `taskagent init --name "Project Name"` + register yourself
 2. `taskagent dashboard` to understand current state
 3. `taskagent list --assignee claude` to see your tasks
 4. `taskagent status <id> in_progress` before starting work

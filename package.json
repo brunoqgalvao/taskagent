@@ -1,6 +1,6 @@
 {
   "name": "taskagent",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A CLI task manager for AI agents and humans. Full versioning, dependencies, blocking, identity.",
   "main": "src/index.js",
   "bin": {

@@ -25,7 +25,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/brunoqgalvao/taskagent/main/
 ## Quick Start
 
 ```bash
-taskagent init
+taskagent init --name "My Project" --desc "What this project is about"
 
 taskagent agent register bruno --type human
 taskagent agent register claude --type agent
@@ -42,6 +42,7 @@ taskagent ui
 
 ## Features
 
+- **Project scope** — name your project on init, view/update with `taskagent project`
 - **Task lifecycle** — pending, in_progress, blocked, completed, failed, cancelled
 - **Dependencies** — tasks depend on other tasks, with cycle detection
 - **Priorities** — low, medium, high, critical
@@ -50,12 +51,14 @@ taskagent ui
 - **Full history** — append-only changelog with snapshots for every mutation
 - **JSON output** — `--json` on every command for programmatic use
 - **Dashboard** — summary view and rich TUI kanban board (`taskagent ui`)
+- **Web UI** — browser-based dashboard on localhost (`taskagent webui`)
 - **Zero dependencies** — just Node.js >= 18
 
 ## Commands
 
 ```
-taskagent init                          Initialize .taskagent/ in current directory
+taskagent init [--name <n>] [--desc <d>] Initialize .taskagent/ in current directory
+taskagent project [--name <n>] [--desc <d>]  Show or update project info
 taskagent add <title> [options]         Create a task
 taskagent list [options]                List tasks (--status, --assignee, --tag, --priority)
 taskagent show <id>                     Show full task details
@@ -76,6 +79,7 @@ taskagent agent tasks <name>            Show agent's tasks
 taskagent history [id]                  Show change history
 taskagent dashboard                     Summary dashboard
 taskagent ui                            Rich terminal dashboard with kanban, deps, workload
+taskagent webui [--port <n>] [--no-open] Web dashboard on localhost
 ```
 
 ### Options

@@ -62,7 +62,8 @@ function buildHeader(data) {
   let lines = [];
   lines.push(ANSI.bold + ANSI.cyan + repeat(BOX.h, width) + ANSI.reset);
 
-  const title = '  TASKAGENT DASHBOARD  ';
+  const projectName = data.project?.name;
+  const title = projectName ? `  ${projectName.toUpperCase()}  ` : '  TASKAGENT DASHBOARD  ';
   const statsText = `Total: ${stats.total} | Done: ${stats.percentComplete}% | Overdue: ${overdueCount}`;
   const padding = Math.max(0, Math.floor((width - title.length - statsText.length) / 2));
 

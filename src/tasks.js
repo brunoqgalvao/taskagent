@@ -9,6 +9,52 @@ export class TaskManager {
     this.store = new Store(rootDir).init();
   }
 
+  // ── Project ─────────────────────────────────────────────
+
+  initProject({ name, description } = {}) {
+    const data = this.store._read();
+    if (!data.project) {
+      data.project = {
+        name: name || null,
+        description: description || null,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      this.store._write(data);
+      this.store._appendHistory({ action: 'project_created', snapshot: { ...data.project } });
+    } else if (name || description) {
+      if (name) data.project.name = name;
+      if (description) data.project.description = description;
+      data.project.updatedAt = new Date().toISOString();
+      this.store._write(data);
+      this.store._appendHistory({ action: 'project_updated', snapshot: { ...data.project } });
+    }
+    return data.project;
+  }
+
+  getProject() {
+    const data = this.store._read();
+    return data.project || null;
+  }
+
+  updateProject(updates) {
+    const data = this.store._read();
+    if (!data.project) {
+      data.project = { name: null, description: null, createdAt: new Date().toISOString() };
+    }
+    const before = { ...data.project };
+    if (updates.name !== undefined) data.project.name = updates.name;
+    if (updates.description !== undefined) data.project.description = updates.description;
+    data.project.updatedAt = new Date().toISOString();
+    this.store._write(data);
+
+    const changes = {};
+    if (updates.name !== undefined && before.name !== updates.name) changes.name = { from: before.name, to: updates.name };
+    if (updates.description !== undefined && before.description !== updates.description) changes.description = { from: before.description, to: updates.description };
+    this.store._appendHistory({ action: 'project_updated', changes, snapshot: { ...data.project } });
+    return data.project;
+  }
+
   // ── Tasks ──────────────────────────────────────────────
 
   createTask({ title, description, priority, tags, deadline, estimatedMinutes, assignee, dependsOn }) {
@@ -263,6 +309,7 @@ export class TaskManager {
     });
 
     return {
+      project: data.project || null,
       total: tasks.length,
       counts,
       overdue: overdue.map(t => ({ id: t.id, title: t.title, deadline: t.deadline })),

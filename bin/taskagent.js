@@ -44,7 +44,8 @@ function usage() {
   taskagent - CLI task manager for agents & humans
 
   Usage:
-    taskagent init                          Initialize .taskagent in current directory
+    taskagent init [--name <n>] [--desc <d>] Initialize .taskagent in current directory
+    taskagent project [--name <n>] [--desc <d>]  Show or update project info
     taskagent add <title> [options]         Create a task
     taskagent list [options]                List tasks (filter by --status, --assignee, --tag, --priority)
     taskagent show <id>                     Show task details
@@ -65,6 +66,7 @@ function usage() {
     taskagent history [id]                  Show change history (all or per-task)
     taskagent dashboard                     Show summary dashboard
     taskagent ui                            Rich terminal dashboard with kanban, deps, workload
+    taskagent webui [--port <n>] [--no-open] Web dashboard on localhost
 
   Options:
     --title <t>           Task title (for update)
@@ -83,12 +85,37 @@ function usage() {
 }
 
 try {
-  const tm = (cmd !== 'init') ? new TaskManager() : null;
+  const tm = (cmd !== 'init' && cmd !== 'webui') ? new TaskManager() : null;
 
   switch (cmd) {
     case 'init': {
-      new TaskManager();
+      const tm2 = new TaskManager();
+      const project = tm2.initProject({ name: flag('name'), description: flag('desc') });
       console.log('  Initialized .taskagent/');
+      if (project.name) console.log(`  Project: ${project.name}`);
+      break;
+    }
+
+    case 'project': {
+      const hasUpdates = flag('name') || flag('desc');
+      if (hasUpdates) {
+        const updates = {};
+        if (flag('name')) updates.name = flag('name');
+        if (flag('desc')) updates.description = flag('desc');
+        const project = tm.updateProject(updates);
+        if (json) { console.log(formatJSON(project)); }
+        else { console.log(`  Updated project`); console.log(`  Name: ${project.name || '(none)'}`); if (project.description) console.log(`  Desc: ${project.description}`); }
+      } else {
+        const project = tm.getProject();
+        if (json) { console.log(formatJSON(project)); }
+        else if (project && project.name) {
+          console.log(`  Project: ${project.name}`);
+          if (project.description) console.log(`  Desc: ${project.description}`);
+          console.log(`  Created: ${project.createdAt}`);
+        } else {
+          console.log('  No project name set. Use: taskagent project --name "My Project"');
+        }
+      }
       break;
     }
 
@@ -251,6 +278,14 @@ try {
       const viewModel = computeDashboardData(rawData);
       if (json) { console.log(formatJSON(viewModel)); }
       else { renderDashboard(viewModel); }
+      break;
+    }
+
+    case 'webui': {
+      const { startServer } = await import('../src/webui/server.js');
+      const port = flag('port') ? parseInt(flag('port')) : 3000;
+      const open = !flagBool('no-open');
+      startServer({ port, open });
       break;
     }
 

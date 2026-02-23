@@ -18,7 +18,7 @@ export class Store {
       mkdirSync(this.dir, { recursive: true });
     }
     if (!existsSync(this.tasksPath)) {
-      writeFileSync(this.tasksPath, JSON.stringify({ tasks: {}, agents: {} }, null, 2));
+      writeFileSync(this.tasksPath, JSON.stringify({ project: null, tasks: {}, agents: {} }, null, 2));
     }
     if (!existsSync(this.historyPath)) {
       writeFileSync(this.historyPath, '');

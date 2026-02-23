@@ -272,6 +272,7 @@ export function computeDashboardData(data) {
   const agents = data.agents || {};
 
   return {
+    project: data.project || null,
     columns: groupTasksByStatus(tasks),
     agents: getAgentWorkload(tasks, agents),
     graph: buildDependencyGraph(tasks),
