@@ -4,13 +4,23 @@ Use this skill when coordinating work across agents or humans, tracking tasks wi
 
 ## Setup
 
-TaskAgent must be installed first. Run the setup script:
+Install globally via npm:
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/brunogalvao/taskagent/main/install.sh)
+npm install -g taskagent
 ```
 
-Or manually: clone the repo and run `npm link` inside it.
+Or run directly with npx (no install needed):
+
+```bash
+npx taskagent --help
+```
+
+Or use the install script:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/brunoqgalvao/taskagent/main/install.sh)
+```
 
 Verify installation: `taskagent --help`
 

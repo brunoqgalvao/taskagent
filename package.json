@@ -10,8 +10,24 @@
     "test": "node test/run.js"
   },
   "type": "module",
-  "keywords": ["cli", "task", "agent", "project-management"],
+  "keywords": ["cli", "task", "agent", "project-management", "ai", "ai-agent", "task-manager"],
   "license": "MIT",
+  "author": "Bruno Galvao",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brunoqgalvao/taskagent.git"
+  },
+  "homepage": "https://github.com/brunoqgalvao/taskagent#readme",
+  "bugs": {
+    "url": "https://github.com/brunoqgalvao/taskagent/issues"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "install.sh",
+    "README.md",
+    "LICENSE"
+  ],
   "engines": {
     "node": ">=18"
   }

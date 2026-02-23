@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO="https://github.com/brunogalvao/taskagent.git"
+REPO="https://github.com/brunoqgalvao/taskagent.git"
 INSTALL_DIR="${HOME}/.taskagent-cli"
 
 echo "  Installing taskagent..."
