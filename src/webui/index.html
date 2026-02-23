@@ -73,14 +73,44 @@
     letter-spacing: 0.5px;
   }
 
+  /* View tabs */
+  .view-tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 24px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .view-tab {
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: inherit;
+  }
+
+  .view-tab:hover { color: var(--text); }
+  .view-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .view-panel { display: none; }
+  .view-panel.active { display: block; }
+
   .main {
     display: grid;
     grid-template-columns: 1fr 300px;
     gap: 0;
-    min-height: calc(100vh - 120px);
+    min-height: calc(100vh - 160px);
   }
 
-  .kanban-area {
+  .content-area {
     padding: 24px;
     overflow-x: auto;
   }
@@ -151,9 +181,7 @@
     transition: border-color 0.15s;
   }
 
-  .card:hover {
-    border-color: var(--accent);
-  }
+  .card:hover { border-color: var(--accent); }
 
   .card-title {
     font-size: 13px;
@@ -180,7 +208,6 @@
   .badge-high { background: rgba(210,153,34,0.2); color: var(--yellow); }
   .badge-medium { background: rgba(88,166,255,0.1); color: var(--text-dim); }
   .badge-low { background: rgba(139,148,158,0.1); color: var(--text-dim); }
-
   .badge-tag { background: rgba(188,140,255,0.15); color: var(--purple); }
   .badge-assignee { background: rgba(57,210,192,0.15); color: var(--cyan); }
   .badge-overdue { background: rgba(248,81,73,0.2); color: var(--red); }
@@ -192,10 +219,174 @@
   .col-failed .column-header { border-top: 3px solid var(--red); }
   .col-cancelled .column-header { border-top: 3px solid var(--text-dim); }
 
-  /* Sidebar sections */
-  .sidebar-section {
-    margin-bottom: 24px;
+  /* Gantt */
+  .gantt-container {
+    min-width: 600px;
   }
+
+  .gantt-header {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 2;
+  }
+
+  .gantt-label-col {
+    width: 200px;
+    min-width: 200px;
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    border-right: 1px solid var(--border);
+  }
+
+  .gantt-timeline-header {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+  }
+
+  .gantt-day-header {
+    flex: 1;
+    min-width: 40px;
+    text-align: center;
+    padding: 8px 2px;
+    font-size: 10px;
+    color: var(--text-dim);
+    border-right: 1px solid var(--border);
+  }
+
+  .gantt-day-header.today {
+    color: var(--accent);
+    font-weight: 600;
+    background: rgba(88,166,255,0.05);
+  }
+
+  .gantt-day-header.weekend {
+    background: rgba(139,148,158,0.05);
+  }
+
+  .gantt-row {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    min-height: 40px;
+  }
+
+  .gantt-row:hover {
+    background: rgba(88,166,255,0.03);
+  }
+
+  .gantt-row-label {
+    width: 200px;
+    min-width: 200px;
+    padding: 8px 12px;
+    font-size: 12px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
+  }
+
+  .gantt-row-label .task-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .gantt-row-label .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .gantt-row-timeline {
+    flex: 1;
+    position: relative;
+    display: flex;
+  }
+
+  .gantt-cell {
+    flex: 1;
+    min-width: 40px;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+
+  .gantt-cell.today {
+    background: rgba(88,166,255,0.05);
+  }
+
+  .gantt-cell.weekend {
+    background: rgba(139,148,158,0.03);
+  }
+
+  .gantt-bar-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+  }
+
+  .gantt-bar {
+    position: absolute;
+    top: 10px;
+    height: 20px;
+    border-radius: 4px;
+    pointer-events: auto;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    font-size: 10px;
+    font-weight: 500;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 4px;
+  }
+
+  .gantt-bar.status-pending { background: var(--yellow); opacity: 0.7; }
+  .gantt-bar.status-in_progress { background: var(--accent); }
+  .gantt-bar.status-blocked { background: var(--red); opacity: 0.7; }
+  .gantt-bar.status-completed { background: var(--green); }
+  .gantt-bar.status-failed { background: var(--red); }
+  .gantt-bar.status-cancelled { background: var(--text-dim); opacity: 0.5; }
+
+  .gantt-dep-line {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .gantt-today-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--accent);
+    opacity: 0.6;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .gantt-empty {
+    padding: 40px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 14px;
+  }
+
+  /* Sidebar sections */
+  .sidebar-section { margin-bottom: 24px; }
 
   .agent-row {
     display: flex;
@@ -206,15 +397,8 @@
     font-size: 13px;
   }
 
-  .agent-name {
-    color: var(--cyan);
-    font-weight: 500;
-  }
-
-  .agent-stats {
-    color: var(--text-dim);
-    font-size: 11px;
-  }
+  .agent-name { color: var(--cyan); font-weight: 500; }
+  .agent-stats { color: var(--text-dim); font-size: 11px; }
 
   .bar-container {
     width: 100%;
@@ -247,19 +431,9 @@
     margin-bottom: 16px;
   }
 
-  .progress-ring svg {
-    transform: rotate(-90deg);
-  }
-
-  .progress-text {
-    font-size: 20px;
-    font-weight: 700;
-  }
-
-  .progress-label {
-    font-size: 11px;
-    color: var(--text-dim);
-  }
+  .progress-ring svg { transform: rotate(-90deg); }
+  .progress-text { font-size: 20px; font-weight: 700; }
+  .progress-label { font-size: 11px; color: var(--text-dim); }
 
   .history-item {
     padding: 6px 0;
@@ -267,15 +441,8 @@
     font-size: 12px;
   }
 
-  .history-item .action {
-    font-weight: 500;
-    color: var(--accent);
-  }
-
-  .history-item .time {
-    color: var(--text-dim);
-    font-size: 10px;
-  }
+  .history-item .action { font-weight: 500; color: var(--accent); }
+  .history-item .time { color: var(--text-dim); font-size: 10px; }
 
   .empty {
     color: var(--text-dim);
@@ -287,6 +454,7 @@
     .main { grid-template-columns: 1fr; }
     .sidebar { border-left: none; border-top: 1px solid var(--border); }
     .kanban { grid-template-columns: 1fr; }
+    .gantt-label-col, .gantt-row-label { width: 140px; min-width: 140px; }
   }
 </style>
 </head>
@@ -299,15 +467,24 @@
 
 <div class="stats-bar" id="stats-bar"></div>
 
+<div class="view-tabs">
+  <button class="view-tab active" data-view="kanban">Kanban</button>
+  <button class="view-tab" data-view="gantt">Gantt</button>
+</div>
+
 <div class="main">
-  <div class="kanban-area">
-    <div class="kanban" id="kanban"></div>
+  <div class="content-area">
+    <div id="view-kanban" class="view-panel active">
+      <div class="kanban" id="kanban"></div>
+    </div>
+    <div id="view-gantt" class="view-panel">
+      <div class="gantt-container" id="gantt"></div>
+    </div>
   </div>
   <div class="sidebar" id="sidebar"></div>
 </div>
 
 <script>
-const PRIORITY_ORDER = { critical: 0, high: 1, medium: 2, low: 3 };
 const STATUS_LABELS = {
   pending: 'Pending',
   in_progress: 'In Progress',
@@ -317,14 +494,49 @@ const STATUS_LABELS = {
   cancelled: 'Cancelled',
 };
 
+const STATUS_COLORS = {
+  pending: 'var(--yellow)',
+  in_progress: 'var(--accent)',
+  blocked: 'var(--red)',
+  completed: 'var(--green)',
+  failed: 'var(--red)',
+  cancelled: 'var(--text-dim)',
+};
+
+let currentView = 'kanban';
+let appData = null;
+
+// View switching
+document.querySelectorAll('.view-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    const view = tab.dataset.view;
+    document.getElementById('view-' + view).classList.add('active');
+    currentView = view;
+    if (appData) renderCurrentView();
+  });
+});
+
+function renderCurrentView() {
+  if (currentView === 'kanban') {
+    renderKanban(appData.dashboard.columns);
+  } else {
+    renderGantt(appData);
+  }
+}
+
 async function fetchData() {
-  const [dashRes, histRes] = await Promise.all([
+  const [dashRes, histRes, tasksRes] = await Promise.all([
     fetch('/api/dashboard'),
     fetch('/api/history'),
+    fetch('/api/tasks'),
   ]);
   const dashboard = await dashRes.json();
   const history = await histRes.json();
-  return { dashboard, history };
+  const tasks = await tasksRes.json();
+  return { dashboard, history, tasks };
 }
 
 function renderStats(stats) {
@@ -337,7 +549,6 @@ function renderStats(stats) {
     { value: stats.completed, label: 'Done', color: 'var(--green)' },
     { value: stats.failed, label: 'Failed', color: 'var(--red)' },
   ];
-
   el.innerHTML = items.map(s =>
     `<div class="stat">
       <div class="value" style="color:${s.color}">${s.value}</div>
@@ -350,13 +561,10 @@ function renderHeader(data) {
   const titleEl = document.getElementById('project-title');
   const metaEl = document.getElementById('project-meta');
   const project = data.dashboard.project;
-
   if (project && project.name) {
     titleEl.textContent = project.name;
     document.title = `${project.name} - taskagent`;
-    if (project.description) {
-      metaEl.textContent = project.description;
-    }
+    if (project.description) metaEl.textContent = project.description;
   }
 }
 
@@ -381,7 +589,6 @@ function makeCard(task) {
 function renderKanban(columns) {
   const el = document.getElementById('kanban');
   const order = ['pending', 'in_progress', 'blocked', 'completed', 'failed', 'cancelled'];
-
   el.innerHTML = order
     .filter(key => columns[key] && columns[key].length > 0 || ['pending', 'in_progress', 'completed'].includes(key))
     .map(key => {
@@ -396,6 +603,138 @@ function renderKanban(columns) {
         </div>
       </div>`;
     }).join('');
+}
+
+// Gantt chart
+function renderGantt(data) {
+  const el = document.getElementById('gantt');
+  const tasks = data.tasks || [];
+
+  if (tasks.length === 0) {
+    el.innerHTML = '<div class="gantt-empty">No tasks to display</div>';
+    return;
+  }
+
+  // Calculate timeline range
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  // Gather all dates to find range
+  let minDate = new Date(today);
+  let maxDate = new Date(today);
+
+  const taskBars = tasks.map(task => {
+    const start = new Date(task.createdAt);
+    const startDay = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+
+    let endDay;
+    if (task.deadline) {
+      endDay = new Date(task.deadline);
+    } else if (task.estimatedMinutes) {
+      endDay = new Date(startDay.getTime() + task.estimatedMinutes * 60000);
+    } else {
+      // Default: 3 days from creation
+      endDay = new Date(startDay.getTime() + 3 * 86400000);
+    }
+    endDay = new Date(endDay.getFullYear(), endDay.getMonth(), endDay.getDate());
+
+    // Ensure end is after start
+    if (endDay <= startDay) endDay = new Date(startDay.getTime() + 86400000);
+
+    if (startDay < minDate) minDate = new Date(startDay);
+    if (endDay > maxDate) maxDate = new Date(endDay);
+
+    return { ...task, startDay, endDay };
+  });
+
+  // Add padding: 2 days before, 3 days after
+  minDate = new Date(minDate.getTime() - 2 * 86400000);
+  maxDate = new Date(maxDate.getTime() + 3 * 86400000);
+
+  // Generate day columns
+  const days = [];
+  const cursor = new Date(minDate);
+  while (cursor <= maxDate) {
+    days.push(new Date(cursor));
+    cursor.setDate(cursor.getDate() + 1);
+  }
+
+  const totalDays = days.length;
+  const dayMs = 86400000;
+
+  function dayIndex(date) {
+    return Math.round((date - minDate) / dayMs);
+  }
+
+  // Sort tasks: in_progress first, then pending, blocked, completed, etc.
+  const statusOrder = { in_progress: 0, blocked: 1, pending: 2, failed: 3, completed: 4, cancelled: 5 };
+  taskBars.sort((a, b) => (statusOrder[a.status] ?? 9) - (statusOrder[b.status] ?? 9) || a.startDay - b.startDay);
+
+  // Build header
+  const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  let html = '';
+
+  // Header
+  html += '<div class="gantt-header">';
+  html += '<div class="gantt-label-col">Task</div>';
+  html += '<div class="gantt-timeline-header">';
+  days.forEach(d => {
+    const isToday = d.getTime() === today.getTime();
+    const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+    const cls = [isToday ? 'today' : '', isWeekend ? 'weekend' : ''].filter(Boolean).join(' ');
+    const label = d.getDate() === 1 || d === days[0]
+      ? `${monthNames[d.getMonth()]} ${d.getDate()}`
+      : `${d.getDate()}`;
+    html += `<div class="gantt-day-header ${cls}">${label}</div>`;
+  });
+  html += '</div></div>';
+
+  // Rows
+  taskBars.forEach(task => {
+    const startIdx = dayIndex(task.startDay);
+    const endIdx = dayIndex(task.endDay);
+    const barLeft = (startIdx / totalDays) * 100;
+    const barWidth = Math.max(((endIdx - startIdx) / totalDays) * 100, 0.5);
+    const dotColor = STATUS_COLORS[task.status] || 'var(--text-dim)';
+
+    html += '<div class="gantt-row">';
+
+    // Label
+    html += `<div class="gantt-row-label">
+      <span class="status-dot" style="background:${dotColor}"></span>
+      <span class="task-name" title="${esc(task.title)}">${esc(task.title)}</span>
+    </div>`;
+
+    // Timeline cells + bar
+    html += '<div class="gantt-row-timeline">';
+    days.forEach(d => {
+      const isToday = d.getTime() === today.getTime();
+      const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+      const cls = [isToday ? 'today' : '', isWeekend ? 'weekend' : ''].filter(Boolean).join(' ');
+      html += `<div class="gantt-cell ${cls}"></div>`;
+    });
+
+    // Bar overlay
+    html += `<div class="gantt-bar-container">
+      <div class="gantt-bar status-${task.status}" style="left:${barLeft}%;width:${barWidth}%"
+           title="${esc(task.title)} (${task.status})${task.assignee ? ' @'+task.assignee : ''}">
+        ${barWidth > 5 ? esc(task.title) : ''}
+      </div>
+    </div>`;
+
+    html += '</div></div>';
+  });
+
+  // Today line
+  const todayIdx = dayIndex(today);
+  if (todayIdx >= 0 && todayIdx <= totalDays) {
+    const todayPct = (todayIdx / totalDays) * 100;
+    // We'll add it via JS after render
+  }
+
+  el.innerHTML = html;
 }
 
 function renderSidebar(data) {
@@ -484,11 +823,11 @@ function esc(s) {
 
 async function init() {
   try {
-    const data = await fetchData();
-    renderHeader(data);
-    renderStats(data.dashboard.stats);
-    renderKanban(data.dashboard.columns);
-    renderSidebar(data);
+    appData = await fetchData();
+    renderHeader(appData);
+    renderStats(appData.dashboard.stats);
+    renderCurrentView();
+    renderSidebar(appData);
   } catch (err) {
     document.body.innerHTML = `<div style="padding:40px;color:var(--red)">
       <h2>Failed to load dashboard</h2>
