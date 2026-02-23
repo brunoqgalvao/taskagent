@@ -3,140 +3,108 @@ name: taskagent
 description: CLI task manager for AI agents and humans. Use when coordinating work, tracking tasks with dependencies, managing blocking/blocked status, priorities, deadlines, or when the user asks to manage project tasks.
 ---
 
-# TaskAgent - CLI Task Manager for Agents
+# TaskAgent — CLI Task Manager for Agents
 
 Use this skill when coordinating work across agents or humans, tracking tasks with dependencies, managing blocking/blocked status, or when the user asks to manage project tasks.
 
-## Setup
+## Prerequisites
 
-Install globally via npm:
+taskagent must be installed globally (`npm install -g taskagent`) or available via npx.
 
-```bash
-npm install -g taskagent
-```
+Verify: `taskagent --help`
 
-Or run directly with npx (no install needed):
+## Initialization
 
-```bash
-npx taskagent --help
-```
-
-Or use the install script:
+Always initialize and register before using:
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/brunoqgalvao/taskagent/main/install.sh)
-```
-
-Verify installation: `taskagent --help`
-
-## Quick Start
-
-Before using tasks, always initialize and register yourself:
-
-```bash
-taskagent init                          # Creates .taskagent/ in current directory
+taskagent init
 taskagent agent register claude --type agent
 ```
 
-## Core Workflow
+## Core Commands
 
-### 1. Register agents involved in the project
-
-```bash
-taskagent agent register claude --type agent
-taskagent agent register bruno --type human
-```
-
-### 2. Create tasks with metadata
+### Create a task
 
 ```bash
-taskagent add "Build auth API" --desc "JWT-based auth endpoints" --priority high --tags backend,auth --deadline 2026-03-01 --estimate 120 --assignee claude
+taskagent add "Build auth API" --desc "JWT endpoints" --priority high --tags backend,auth --deadline 2026-03-01 --estimate 120 --assignee claude --depends-on <id,id>
 ```
 
-Options:
-- `--desc` : Description of what needs to be done
-- `--priority` : low | medium | high | critical
-- `--tags` : Comma-separated tags for categorization
-- `--deadline` : ISO date (YYYY-MM-DD)
-- `--estimate` : Estimated minutes to complete
-- `--assignee` : Registered agent/person name
-- `--depends-on` : Comma-separated task IDs this depends on
-
-### 3. Manage task status
+### Manage status
 
 ```bash
-taskagent status <id> in_progress    # I'm working on this
-taskagent status <id> blocked        # Something is blocking me
-taskagent status <id> completed      # Done!
-taskagent status <id> failed         # Couldn't complete
-taskagent status <id> cancelled      # No longer needed
+taskagent status <id> in_progress
+taskagent status <id> completed
+taskagent status <id> blocked
+taskagent status <id> failed
+taskagent status <id> cancelled
 ```
 
-Valid status flow: pending -> in_progress -> blocked/completed/failed/cancelled
-
-### 4. Set up dependencies
+### Query tasks
 
 ```bash
-taskagent dep add <task-id> <depends-on-id>   # task depends on another
-taskagent dep rm <task-id> <depends-on-id>     # remove dependency
-taskagent dep blockers <task-id>               # what's blocking this task?
-taskagent dep blocking <task-id>               # what does this task block?
+taskagent list                          # all tasks
+taskagent list --status in_progress     # filter by status
+taskagent list --assignee claude        # filter by agent
+taskagent list --tag backend            # filter by tag
+taskagent list --priority critical      # filter by priority
+taskagent show <id>                     # single task details
+taskagent agent tasks claude            # my assigned tasks
 ```
 
-Important: A task cannot move to `in_progress` if its dependencies aren't `completed`.
-
-### 5. View and filter tasks
+### Dependencies
 
 ```bash
-taskagent list                          # All tasks
-taskagent list --status in_progress     # Only active tasks
-taskagent list --assignee claude        # My tasks
-taskagent list --tag backend            # By tag
-taskagent list --priority critical      # By priority
-taskagent show <id>                     # Full task details
-taskagent list --verbose                # Detailed view
+taskagent dep add <id> <depends-on-id>  # add dependency
+taskagent dep rm <id> <depends-on-id>   # remove dependency
+taskagent dep blockers <id>             # unmet dependencies
+taskagent dep blocking <id>             # what this blocks
 ```
 
-### 6. Reassign and update tasks
+A task cannot start (`in_progress`) until all its dependencies are `completed`. Cycles are detected and rejected.
+
+### Update and reassign
 
 ```bash
-taskagent assign <id> bruno             # Reassign to someone else
-taskagent update <id> --title "New name" --priority critical --deadline 2026-04-01
+taskagent update <id> --title "New title" --priority critical --deadline 2026-04-01
+taskagent assign <id> bruno
+taskagent delete <id>
 ```
 
-### 7. Check history and dashboard
+### Overview
 
 ```bash
-taskagent dashboard                     # Summary of all tasks
-taskagent history                       # Full changelog
-taskagent history <id>                  # History for one task
+taskagent dashboard                     # summary stats
+taskagent ui                            # rich kanban board
+taskagent history                       # full audit trail
+taskagent history <id>                  # single task history
 ```
 
-### 8. JSON output for programmatic use
+### JSON output
 
-All commands support `--json` flag for machine-readable output:
+All commands support `--json` for programmatic parsing:
 
 ```bash
-taskagent list --json                   # JSON array of tasks
-taskagent show <id> --json              # JSON task object
-taskagent dashboard --json              # JSON summary
+taskagent list --json
+taskagent show <id> --json
+taskagent dashboard --json
 ```
 
-## Agent Best Practices
+## Workflow
 
-1. **Always register yourself** at the start of a session: `taskagent agent register <your-name> --type agent`
-2. **Mark tasks in_progress** before you start working on them
-3. **Mark tasks blocked** if you hit a dependency or need input, and explain in a task update
-4. **Mark tasks completed** immediately when done - don't batch
-5. **Use dependencies** to express task ordering. The system prevents starting tasks with unmet deps
-6. **Use tags** for cross-cutting concerns (e.g., `backend`, `urgent`, `bug`)
-7. **Check the dashboard** at the start of a session to understand project state
-8. **Use --json** when you need to parse output programmatically
-9. **All changes are versioned** - use `taskagent history <id>` to see the full audit trail
+1. `taskagent init` + register yourself
+2. `taskagent dashboard` to understand current state
+3. `taskagent list --assignee claude` to see your tasks
+4. `taskagent status <id> in_progress` before starting work
+5. Do the work
+6. `taskagent status <id> completed` when done
+7. Move to the next task
 
-## Data Storage
+## Rules
 
-- All data lives in `.taskagent/` in the project root
-- `tasks.json` - Current state of all tasks and agents
-- `history.jsonl` - Append-only changelog with full snapshots
-- Safe to commit to git for collaboration
+- Always mark `in_progress` before starting, `completed` when done
+- Check `taskagent dep blockers <id>` before starting a task
+- Use `--json` when you need to parse output
+- Register agents before assigning tasks to them
+- Use tags for cross-cutting concerns (bug, frontend, urgent)
+- The audit trail in `taskagent history` tracks every change

@@ -5,6 +5,8 @@ import {
   formatTask, formatTaskList, formatSummary,
   formatHistory, formatAgents, formatJSON,
 } from '../src/format.js';
+import { computeDashboardData } from '../src/dashboard/data.js';
+import { renderDashboard } from '../src/dashboard/render.js';
 
 const args = process.argv.slice(2);
 const cmd = args[0];
@@ -62,6 +64,7 @@ function usage() {
 
     taskagent history [id]                  Show change history (all or per-task)
     taskagent dashboard                     Show summary dashboard
+    taskagent ui                            Rich terminal dashboard with kanban, deps, workload
 
   Options:
     --title <t>           Task title (for update)
@@ -240,6 +243,14 @@ try {
       const summary = tm.summary();
       if (json) { console.log(formatJSON(summary)); }
       else { console.log(formatSummary(summary)); }
+      break;
+    }
+
+    case 'ui': {
+      const rawData = tm.store._read();
+      const viewModel = computeDashboardData(rawData);
+      if (json) { console.log(formatJSON(viewModel)); }
+      else { renderDashboard(viewModel); }
       break;
     }
 

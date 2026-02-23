@@ -1,22 +1,22 @@
 # taskagent
 
-A CLI task manager built for AI agents and humans to collaborate on projects. Track tasks with dependencies, priorities, deadlines, assignments, and full version history.
+A CLI task manager built for AI agents and humans to collaborate on projects.
 
-Zero dependencies. Pure Node.js. Works anywhere.
+Track tasks with dependencies, priorities, deadlines, assignments, and full version history. Zero dependencies. Pure Node.js.
 
 ## Install
-
-```bash
-npx taskagent --help
-```
-
-Or install globally:
 
 ```bash
 npm install -g taskagent
 ```
 
-Or clone and link:
+Or run with npx:
+
+```bash
+npx taskagent --help
+```
+
+Or install from source:
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/brunoqgalvao/taskagent/main/install.sh)
@@ -25,37 +25,32 @@ bash <(curl -fsSL https://raw.githubusercontent.com/brunoqgalvao/taskagent/main/
 ## Quick Start
 
 ```bash
-# Initialize in your project
 taskagent init
 
-# Register yourself
 taskagent agent register bruno --type human
 taskagent agent register claude --type agent
 
-# Create tasks
 taskagent add "Build auth API" --desc "JWT endpoints" --priority high --assignee claude
 taskagent add "Write tests" --priority medium --assignee bruno
 
-# Work on tasks
 taskagent status <id> in_progress
 taskagent status <id> completed
 
-# See what's happening
 taskagent dashboard
-taskagent list --status in_progress
+taskagent ui
 ```
 
 ## Features
 
-- **Task lifecycle**: pending, in_progress, blocked, completed, failed, cancelled
-- **Dependencies**: tasks can depend on other tasks, with cycle detection
-- **Priorities**: low, medium, high, critical
-- **Agent registry**: register humans and AI agents with identity tracking
-- **Tags & deadlines**: categorize and time-bound your work
-- **Full history**: append-only changelog with snapshots for every change
-- **JSON output**: `--json` flag on every command for programmatic use
-- **Dashboard**: summary view of project state
-- **Zero dependencies**: just Node.js >= 18
+- **Task lifecycle** — pending, in_progress, blocked, completed, failed, cancelled
+- **Dependencies** — tasks depend on other tasks, with cycle detection
+- **Priorities** — low, medium, high, critical
+- **Agent registry** — register humans and AI agents with identity tracking
+- **Tags & deadlines** — categorize and time-bound work
+- **Full history** — append-only changelog with snapshots for every mutation
+- **JSON output** — `--json` on every command for programmatic use
+- **Dashboard** — summary view and rich TUI kanban board (`taskagent ui`)
+- **Zero dependencies** — just Node.js >= 18
 
 ## Commands
 
@@ -80,9 +75,10 @@ taskagent agent tasks <name>            Show agent's tasks
 
 taskagent history [id]                  Show change history
 taskagent dashboard                     Summary dashboard
+taskagent ui                            Rich terminal dashboard with kanban, deps, workload
 ```
 
-### Task Options
+### Options
 
 | Flag | Description |
 |------|-------------|
@@ -96,23 +92,18 @@ taskagent dashboard                     Summary dashboard
 | `--json` | JSON output |
 | `--verbose` | Detailed view |
 
-## Claude Code Skill
-
-To use taskagent as a Claude Code skill, copy the skill file into your project:
-
-```bash
-mkdir -p .claude/skills
-curl -fsSL https://raw.githubusercontent.com/brunoqgalvao/taskagent/main/.claude/skills/taskagent.md \
-  -o .claude/skills/taskagent.md
-```
-
 ## Data Storage
 
 All data lives in `.taskagent/` in your project root:
-- `tasks.json` - current state
-- `history.jsonl` - append-only audit trail
+
+- `tasks.json` — current state of all tasks and agents
+- `history.jsonl` — append-only audit trail with full snapshots
 
 Safe to commit to git for team collaboration.
+
+## For AI Agents
+
+See [docs.md](docs.md) for detailed usage instructions written for AI agents, covering workflows, best practices, and the `--json` interface.
 
 ## License
 
